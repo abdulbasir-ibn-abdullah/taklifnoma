@@ -1,0 +1,814 @@
+:root {
+    --primary-color: #d4af37;
+    --primary-dark: #aa8c2c;
+    --primary-light: #f0dfa0;
+    --text-dark: #2c2c2c;
+    --text-light: #666666;
+    --bg-light: #fdfbf7;
+    --white: #ffffff;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f4f1ea;
+    color: var(--text-dark);
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+a, button, select, [tabindex] {
+    -webkit-tap-highlight-color: rgba(212, 175, 55, 0.25);
+}
+
+a:focus-visible,
+button:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--primary-dark);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Suzuvchi bezaklar */
+.particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    top: 100%;
+    font-size: 1rem;
+    opacity: 0;
+    animation-name: float-up;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+}
+
+@keyframes float-up {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.55; }
+    90% { opacity: 0.35; }
+    100% { transform: translateY(-110vh) rotate(180deg); opacity: 0; }
+}
+
+/* Kirish / Welcome Screen */
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    background: rgba(244, 241, 234, 0.96);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.welcome-card {
+    text-align: center;
+    background: var(--white);
+    padding: 35px 25px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    max-width: 320px;
+    width: 100%;
+    border: 1px solid var(--primary-color);
+    animation: modalPop 0.4s ease-out;
+}
+
+.welcome-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 10px;
+    animation: pulse 2.4s infinite ease-in-out;
+}
+
+.welcome-card h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.8rem;
+    color: var(--primary-dark);
+}
+
+.welcome-card p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin: 10px 0 20px;
+}
+
+.start-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.start-btn:active {
+    transform: scale(0.96);
+}
+
+@media (hover: hover) {
+    .start-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.5);
+    }
+}
+
+/* Language Switcher */
+.lang-switcher {
+    position: fixed;
+    top: calc(15px + var(--safe-top));
+    right: 15px;
+    z-index: 1000;
+}
+
+.lang-switcher select {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--primary-color);
+    padding: 6px 10px;
+    border-radius: 15px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+}
+
+.container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 20px calc(24px + var(--safe-bottom));
+    background: var(--white);
+    box-shadow: var(--shadow);
+    min-height: 100vh;
+    min-height: 100dvh;
+    position: relative;
+    z-index: 2;
+}
+
+/* Floating Music Button */
+.music-toggle {
+    position: fixed;
+    bottom: calc(24px + var(--safe-bottom));
+    right: 24px;
+    z-index: 1000;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.45);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: transform 0.2s ease;
+}
+
+.music-toggle:active {
+    transform: scale(0.92);
+}
+
+.music-toggle.playing {
+    animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Guest Card */
+.guest-card {
+    text-align: center;
+    background: #faf5eb;
+    border: 1px dashed var(--primary-color);
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.guest-title {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--primary-dark);
+}
+
+.guest-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 10px 0;
+}
+
+.sub-title {
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--primary-color);
+}
+
+.main-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.8rem, 8vw, 4rem);
+    font-weight: 400;
+    background: linear-gradient(120deg, var(--primary-dark), var(--primary-color), var(--primary-light), var(--primary-color), var(--primary-dark));
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 6s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 300% center; }
+}
+
+.divider {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+/* Families */
+.families-section {
+    text-align: center;
+    margin: 25px 0;
+}
+
+.family-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.and-symbol {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    display: block;
+    margin: -5px 0;
+}
+
+.invitation-text {
+    font-size: 0.92rem;
+    color: var(--text-light);
+    margin-top: 15px;
+}
+
+/* Couple Section with Background Watermark */
+.couple-section {
+    position: relative;
+    margin: 35px 0;
+    padding: 25px 10px;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.couple-bg-watermark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.18;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.couple-cards-wrapper {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.couple-card {
+    text-align: center;
+    flex: 1;
+}
+
+.img-wrapper {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    padding: 3px;
+    background: #fff;
+    position: relative;
+}
+
+.img-wrapper.clickable {
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.img-wrapper.clickable:active {
+    transform: scale(0.95);
+}
+
+@media (hover: hover) {
+    .img-wrapper.clickable:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 18px rgba(212, 175, 55, 0.35);
+    }
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.info-badge {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background: var(--white);
+    border-radius: 50%;
+    font-size: 12px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.couple-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.3rem, 3.5vw, 1.6rem);
+}
+
+.role {
+    font-size: 0.75rem;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.center-heart {
+    z-index: 2;
+    font-size: 1.5rem;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+}
+
+.click-hint {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-top: 15px;
+    font-style: italic;
+}
+
+/* Video */
+.video-section {
+    margin: 25px 0;
+    text-align: center;
+}
+
+.video-header {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4vw, 1.7rem);
+    margin-bottom: 12px;
+}
+
+.video-section video {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    background: #000;
+    max-height: 70vh;
+}
+
+/* Date & Countdown */
+.date-section {
+    text-align: center;
+    background: #faf7f0;
+    padding: 24px 16px;
+    border-radius: 16px;
+    margin: 30px 0;
+    border: 1px solid #ebd8b0;
+}
+
+.date-box {
+    margin-bottom: 20px;
+}
+
+.day-name {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.day-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 8vw, 4rem);
+    font-weight: 600;
+    color: var(--primary-dark);
+    line-height: 1;
+}
+
+.month-year {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+.time {
+    display: block;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-top: 6px;
+    font-size: 1rem;
+}
+
+.countdown-wrapper h3 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.countdown {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.time-block {
+    background: var(--white);
+    padding: 10px 8px;
+    border-radius: 10px;
+    min-width: 65px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+    transition: transform 0.2s ease;
+}
+
+.time-block span {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    font-variant-numeric: tabular-nums;
+}
+
+.time-block p {
+    font-size: 0.65rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+/* Location */
+.location-section {
+    text-align: center;
+    margin: 35px 0;
+}
+
+.location-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 4.5vw, 1.9rem);
+    margin-bottom: 15px;
+}
+
+.restaurant-img-wrapper {
+    width: 100%;
+    height: 200px;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    box-shadow: var(--shadow);
+}
+
+.restaurant-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+@media (hover: hover) {
+    .restaurant-img-wrapper:hover img {
+        transform: scale(1.06);
+    }
+}
+
+.restaurant-name {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--text-dark);
+}
+
+.address {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.map-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.map-btn {
+    display: block;
+    padding: 14px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.map-btn:active {
+    transform: scale(0.97);
+}
+
+@media (hover: hover) {
+    .map-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.14);
+    }
+}
+
+.google-btn { background: #4285F4; color: white; }
+.yandex-btn { background: #FC3F1D; color: white; }
+
+/* Footer */
+.footer {
+    text-align: center;
+    padding: 20px 0;
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    color: var(--primary-color);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    position: relative;
+    background: var(--white);
+    width: 100%;
+    max-width: 380px;
+    border-radius: 20px;
+    padding: 25px 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    z-index: 2001;
+    text-align: center;
+    animation: modalPop 0.3s ease-out;
+    max-height: 90dvh;
+    overflow-y: auto;
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    color: var(--text-light);
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+}
+
+.modal-img-wrapper {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+    overflow: hidden;
+}
+
+.modal-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-body h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+}
+
+.modal-bio-text {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-top: 12px;
+    line-height: 1.5;
+}
+
+/* Scroll Animations */
+.animate-up, .animate-left, .animate-right, .animate-zoom {
+    opacity: 0;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.8s ease-out;
+}
+
+.animate-up { transform: translateY(35px); }
+.animate-left { transform: translateX(-35px); }
+.animate-right { transform: translateX(35px); }
+.animate-zoom { transform: scale(0.75); }
+
+.animate-up.visible, .animate-left.visible, .animate-right.visible, .animate-zoom.visible {
+    transform: translate(0) scale(1);
+    opacity: 1;
+}
+
+/* ===== Responsive: Tablet va Desktop ===== */
+@media (min-width: 640px) {
+    body {
+        display: flex;
+        justify-content: center;
+        background: radial-gradient(circle at top, #fbf8f1, #ece6d6 80%);
+        padding: 40px 0;
+    }
+
+    .container {
+        max-width: 600px;
+        min-height: auto;
+        border-radius: 28px;
+        padding: 48px 52px;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+    }
+
+    .lang-switcher {
+        top: 24px;
+        right: 24px;
+    }
+
+    .couple-cards-wrapper {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    .img-wrapper {
+        width: 130px;
+        height: 130px;
+    }
+
+    .map-buttons {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .map-btn {
+        flex: 1;
+        max-width: 260px;
+    }
+
+    .music-toggle {
+        right: calc(50% - 300px + 24px);
+    }
+}
+
+@media (min-width: 640px) and (max-width: 900px) {
+    .music-toggle { right: 24px; }
+}
+
+@media (min-width: 900px) {
+    .container {
+        max-width: 680px;
+        padding: 56px 64px;
+    }
+
+    .restaurant-img-wrapper {
+        height: 260px;
+    }
+}
+
+/* Juda kichik ekranlar (eski telefonlar) */
+@media (max-width: 340px) {
+    .container { padding: 18px 14px; }
+    .img-wrapper { width: 95px; height: 95px; }
+    .time-block { min-width: 56px; padding: 8px 6px; }
+}
+
+/* Landscape mobil rejim */
+@media (max-height: 480px) and (orientation: landscape) {
+    .welcome-screen { padding: 10px; }
+    .welcome-card { padding: 20px 22px; }
+}
+
+/* Animatsiyalarni kamaytirishni afzal koʻrgan foydalanuvchilar uchun */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .main-title {
+        animation: none;
+        -webkit-text-fill-color: var(--primary-dark);
+    }
+    .particles { display: none; }
+}
+
+/* Chop etish (print) */
+@media print {
+    .welcome-screen, .particles, .music-toggle, .lang-switcher, .video-section { display: none !important; }
+}

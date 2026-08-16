@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Taklifnoma — Wedding Invitation</title>
+    <meta name="description" content="Sizni toʻy marosimimizga taklif etamiz. Batafsil maʼlumot, sana, manzil va boshqalar shu yerda.">
+    <meta name="theme-color" content="#d4af37">
+    <meta name="color-scheme" content="light">
+
+    <!-- Ijtimoiy tarmoqlarda chiroyli koʻrinish uchun (WhatsApp/Telegram/Facebook) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Toʻy Taklifnomasi">
+    <meta property="og:description" content="Sizni bizning toʻy marosimimizga taklif etamiz!">
+    <meta property="og:image" content="assets/couple.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Tashqi fayl talab qilmaydigan favicon (emoji) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23d4af37%22/><text x=%2250%22 y=%2268%22 font-size=%2258%22 text-anchor=%22middle%22>💍</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <noscript>
+        <p style="text-align:center;padding:40px 20px;font-family:sans-serif;">
+            Ushbu taklifnomani koʻrish uchun brauzeringizda JavaScript yoqilgan boʻlishi kerak.
+        </p>
+    </noscript>
+
+    <!-- Suzuvchi bezaklar (JS orqali toʻldiriladi) -->
+    <div id="particles" class="particles" aria-hidden="true"></div>
+
+    <!-- Kirish Ekran (Audio Autoplay Cheklovini Aylanish Uchun) -->
+    <div id="welcome-screen" class="welcome-screen">
+        <div class="welcome-card">
+            <span class="welcome-icon">💌</span>
+            <h2 id="welcome-title">Taklifnoma</h2>
+            <p id="welcome-sub">Musiqa bilan koʻrish uchun bosing</p>
+            <button id="start-btn" class="start-btn" type="button">Ochish / Open</button>
+        </div>
+    </div>
+
+    <!-- Audio Boshqaruv -->
+    <audio id="bg-audio" loop preload="auto" playsinline></audio>
+    <button id="music-btn" class="music-toggle hidden" aria-label="Musiqani yoqish/oʻchirish" type="button">
+        <span class="music-icon">🎵</span>
+    </button>
+
+    <!-- Tilni Tanlash Tugmasi -->
+    <div class="lang-switcher">
+        <label for="lang-select" class="sr-only">Tilni tanlang</label>
+        <select id="lang-select" aria-label="Tilni tanlang / Select language">
+            <option value="uz">UZ (Lotin)</option>
+            <option value="uzk">ЎЗ (Кирилл)</option>
+            <option value="ru">RU (Русский)</option>
+            <option value="en">EN (English)</option>
+        </select>
+    </div>
+
+    <div class="container">
+
+        <!-- Mehmon nomi -->
+        <div id="guest-card" class="guest-card animate-up hidden">
+            <span id="ui-dear" class="guest-title">Hurmatli va qadrli</span>
+            <h2 id="guest-name" class="guest-name">...</h2>
+        </div>
+
+        <!-- Header -->
+        <header class="header animate-up">
+            <p id="ui-invitation" class="sub-title">Sizni taklif etamiz</p>
+            <h1 id="ui-wedding-title" class="main-title">Baxt Toʻyi</h1>
+            <div class="divider">✦</div>
+        </header>
+
+        <!-- Oilalar -->
+        <section class="families-section animate-up">
+            <p id="groom-family" class="family-name">...</p>
+            <span class="and-symbol">&</span>
+            <p id="bride-family" class="family-name">...</p>
+            <p id="ui-invite-text" class="invitation-text">
+                oilalari sizni farzandlarining nikoh toʻylariga bagʻishlangan tantanali marosimga lutfan taklif etadi.
+            </p>
+        </section>
+
+        <!-- Juftlik Qismi (Background sifatida couple.png / juftlik.png) -->
+        <section class="couple-section animate-zoom">
+            <div id="couple-bg" class="couple-bg-watermark"></div>
+
+            <div class="couple-cards-wrapper">
+                <!-- Kuyov -->
+                <div class="couple-card animate-left" id="groom-card" role="button" tabindex="0">
+                    <div class="img-wrapper clickable">
+                        <img id="groom-img" src="" alt="Kuyov" loading="eager">
+                        <div class="info-badge">ℹ️</div>
+                    </div>
+                    <h3 id="groom-name">...</h3>
+                    <p id="ui-role-groom" class="role">Kuyov</p>
+                </div>
+
+                <div class="center-heart">
+                    <span>❤️</span>
+                </div>
+
+                <!-- Kelin -->
+                <div class="couple-card animate-right" id="bride-card" role="button" tabindex="0">
+                    <div class="img-wrapper clickable">
+                        <img id="bride-img" src="" alt="Kelin" loading="eager">
+                        <div class="info-badge">ℹ️</div>
+                    </div>
+                    <h3 id="bride-name">...</h3>
+                    <p id="ui-role-bride" class="role">Kelin</p>
+                </div>
+            </div>
+            <p id="ui-click-hint" class="click-hint">Batafsil ma'lumot uchun surat ustiga bosing</p>
+        </section>
+
+        <!-- Video (agar assets ichida video fayli topilsa avtomatik chiqadi) -->
+        <section id="video-container" class="video-section hidden animate-up">
+            <h2 id="ui-video-header" class="video-header">Bizning videomiz</h2>
+            <video id="wedding-video" controls playsinline preload="metadata"></video>
+        </section>
+
+        <!-- Sana va Taymer -->
+        <section class="date-section animate-up">
+            <div class="date-box">
+                <span id="wedding-day-name" class="day-name">...</span>
+                <span id="wedding-day-num" class="day-number">--</span>
+                <span id="wedding-month-year" class="month-year">...</span>
+                <span id="wedding-time-text" class="time">...</span>
+            </div>
+
+            <!-- Taymer -->
+            <div class="countdown-wrapper">
+                <h3 id="ui-countdown-title">Toʻygacha qolgan vaqt:</h3>
+                <div id="countdown" class="countdown" aria-live="off">
+                    <div class="time-block"><span id="days">00</span><p id="ui-lbl-days">Kun</p></div>
+                    <div class="time-block"><span id="hours">00</span><p id="ui-lbl-hours">Soat</p></div>
+                    <div class="time-block"><span id="minutes">00</span><p id="ui-lbl-minutes">Daqiqa</p></div>
+                    <div class="time-block"><span id="seconds">00</span><p id="ui-lbl-seconds">Soniya</p></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Restoran va Xarita -->
+        <section class="location-section animate-up">
+            <h2 id="ui-venue-header">Tantanalar Saroyi</h2>
+            <div class="restaurant-img-wrapper">
+                <img id="restaurant-img" src="" alt="Restoran" loading="lazy">
+            </div>
+            <p id="restaurant-name" class="restaurant-name">...</p>
+            <p id="venue-address" class="address">...</p>
+
+            <div class="map-buttons">
+                <a id="google-map-btn" href="#" target="_blank" rel="noopener noreferrer" class="map-btn google-btn">
+                    <span id="ui-btn-google">📍 Google Maps orqali koʻrish</span>
+                </a>
+                <a id="yandex-map-btn" href="#" target="_blank" rel="noopener noreferrer" class="map-btn yandex-btn">
+                    <span id="ui-btn-yandex">🚕 Yandex Maps orqali koʻrish</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer animate-up">
+            <p id="ui-footer-text">Tashrifingizdan mamnun boʻlamiz!</p>
+        </footer>
+
+    </div>
+
+    <!-- Modal Popup -->
+    <div id="info-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-name">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close" type="button" aria-label="Yopish">&times;</button>
+            <div class="modal-body">
+                <div class="modal-img-wrapper">
+                    <img id="modal-img" src="" alt="">
+                </div>
+                <h3 id="modal-name"></h3>
+                <p id="modal-role" class="role"></p>
+                <p id="modal-bio" class="modal-bio-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

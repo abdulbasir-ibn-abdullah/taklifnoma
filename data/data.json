@@ -1,0 +1,52 @@
+{
+  "wedding_date": "2026-08-20",
+  "wedding_time": "19:00",
+  "guest_name": "Mehmonimiz",
+  "restaurant_location": {
+    "lat": 39.7345,
+    "lon": 64.1850
+  },
+  "translations": {
+    "uz": {
+      "groom": "Yahyo",
+      "bride": "Madina",
+      "groom_bio": "Yahyo Yagʻmurov",
+      "bride_bio": "Madina Xolova",
+      "groom_family": "Oltiyevlar oilasi",
+      "bride_family": "Xolovlar oilasi",
+      "restaurant_name": "Oʻzbegim tantanalar Saroyi",
+      "venue_address": "Buxoro viloyati, Jondor tumani Oʻzbegim toʻyxonasi"
+    },
+    "uzk": {
+      "groom": "Яҳё",
+      "bride": "Мадина",
+      "groom_bio": "Яҳё Яғмуров",
+      "bride_bio": "Мадина Холова",
+      "groom_family": "Олтиевлар оиласи",
+      "bride_family": "Холовлар оиласи",
+      "restaurant_name": "Ўзбегим тантаналар Саройи",
+      "venue_address": "Бухоро вилояти, Жондор тумани Ўзбегим тўйхонаси"
+    },
+    "ru": {
+      "groom": "Яхё",
+      "bride": "Мадина",
+      "groom_bio": "Яхё Ягмуров",
+      "bride_bio": "Мадина Холова",
+      "groom_family": "Семья Олтиевых",
+      "bride_family": "Семья Холовых",
+      "restaurant_name": "Торжественный зал «Oʻzbegim»",
+      "venue_address": "Бухарская область, Жондорский район, тойхона «Oʻzbegim»"
+    },
+    "en": {
+      "groom": "Yahyo",
+      "bride": "Madina",
+      "groom_bio": "Yahyo Yagmurov",
+      "bride_bio": "Madina Kholova",
+      "groom_family": "Oltiev Family",
+      "bride_family": "Kholov Family",
+      "restaurant_name": "Oʻzbegim Grand Ballroom",
+      "venue_address": "Bukhara region, Jondor district, Oʻzbegim wedding hall"
+    }
+  }
+}
+
