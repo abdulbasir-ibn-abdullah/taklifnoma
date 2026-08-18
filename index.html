@@ -21,8 +21,20 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link id="theme-stylesheet" rel="stylesheet" href="style-royal.css">
+    <script>
+        // Sahifa chizilishidan oldin saqlangan dizaynni tiklash (yaltirash/flash bo'lmasligi uchun)
+        (function () {
+            try {
+                var saved = localStorage.getItem('taklifnoma_theme');
+                var valid = ['gold', 'blue', 'royal'];
+                if (saved && valid.indexOf(saved) !== -1 && saved !== 'gold') {
+                    document.getElementById('theme-stylesheet').setAttribute('href', 'style-' + saved + '.css');
+                }
+            } catch (e) { /* localStorage mavjud bo'lmasa e'tiborsiz qoldiriladi */ }
+        })();
+    </script>
 </head>
 <body>
 
@@ -51,8 +63,18 @@
         <span class="music-icon">🎵</span>
     </button>
 
-    <!-- Tilni Tanlash Tugmasi -->
-    <div class="lang-switcher">
+    <!-- Dizayn Tanlash Tugmasi (chap tomonda) -->
+    <div class="corner-controls corner-left">
+        <label for="theme-select" class="sr-only">Dizaynni tanlang</label>
+        <select id="theme-select" aria-label="Dizaynni tanlang / Choose design">
+            <option value="gold">🟡 Oltin</option>
+            <option value="blue">🔵 Koʻk-Oq</option>
+            <option value="royal">⚜️ Qirollik Oltin</option>
+        </select>
+    </div>
+
+    <!-- Tilni Tanlash Tugmasi (o'ng tomonda) -->
+    <div class="corner-controls corner-right">
         <label for="lang-select" class="sr-only">Tilni tanlang</label>
         <select id="lang-select" aria-label="Tilni tanlang / Select language">
             <option value="uz">UZ (Lotin)</option>
@@ -116,13 +138,19 @@
                     <p id="ui-role-bride" class="role">Kelin</p>
                 </div>
             </div>
-            <p id="ui-click-hint" class="click-hint">Batafsil ma'lumot uchun surat ustiga bosing</p>
+            <p id="ui-click-hint" class="click-hint">ALLAH ULARNING QALBLARINI SEVGI ILA BIRLASHTIRDI..." (ANFAL SURASI, 63-OYAT)</p>
         </section>
 
-        <!-- Video (agar assets ichida video fayli topilsa avtomatik chiqadi) -->
+        <!-- Video(lar) — assets ichida topilgan barcha videolar avtomatik chiqadi -->
         <section id="video-container" class="video-section hidden animate-up">
-            <h2 id="ui-video-header" class="video-header">Bizning videomiz</h2>
-            <video id="wedding-video" controls playsinline preload="metadata"></video>
+            <h2 id="ui-video-header" class="video-header">Videolar</h2>
+            <div id="video-list"></div>
+        </section>
+
+        <!-- Qo'shimcha rasmlar galereyasi — assets ichida topilsa avtomatik chiqadi -->
+        <section id="gallery-container" class="gallery-section hidden animate-up">
+            <h2 id="ui-gallery-header" class="gallery-header">Rasmlar</h2>
+            <div id="gallery-list" class="gallery-grid"></div>
         </section>
 
         <!-- Sana va Taymer -->
@@ -167,7 +195,7 @@
 
         <!-- Footer -->
         <footer class="footer animate-up">
-            <p id="ui-footer-text">Tashrifingizdan mamnun boʻlamiz!</p>
+            <p id="ui-footer-text">SIZNING ISHTIROKINGIZ BIZNING UNUTILMAS KUNIMIZGA QUVONCH BAGʻISHLAYDI. BU BAXTLI LAHZANI SIZ BILAN BIRGA NISHONLASHNI INTIQLIK BILAN KUTYAPMIZ.</p>
         </footer>
 
     </div>
@@ -186,6 +214,13 @@
                 <p id="modal-bio" class="modal-bio-text"></p>
             </div>
         </div>
+    </div>
+
+    <!-- Galereya rasmini kattalashtirib ko'rish oynasi -->
+    <div id="gallery-modal" class="modal hidden" role="dialog" aria-modal="true">
+        <div class="modal-overlay" id="gallery-modal-overlay"></div>
+        <button class="gallery-modal-close" id="gallery-modal-close" type="button" aria-label="Yopish">&times;</button>
+        <img id="gallery-modal-img" class="gallery-modal-img" src="" alt="">
     </div>
 
     <script src="script.js"></script>

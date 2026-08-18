@@ -154,15 +154,17 @@ select:focus-visible,
     }
 }
 
-/* Language Switcher */
-.lang-switcher {
+/* Boshqaruv tugmalari (til / dizayn) — chap va o'ng burchakka ajratilgan */
+.corner-controls {
     position: fixed;
     top: calc(15px + var(--safe-top));
-    right: 15px;
     z-index: 1000;
 }
 
-.lang-switcher select {
+.corner-left { left: 15px; }
+.corner-right { right: 15px; }
+
+.corner-controls select {
     background: rgba(255, 255, 255, 0.92);
     border: 1px solid var(--primary-color);
     padding: 6px 10px;
@@ -173,12 +175,13 @@ select:focus-visible,
     outline: none;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     cursor: pointer;
+    max-width: 40vw;
 }
 
 .container {
     max-width: 480px;
     margin: 0 auto;
-    padding: 24px 20px calc(24px + var(--safe-bottom));
+    padding: calc(24px + var(--safe-top) + 34px) 20px calc(24px + var(--safe-bottom));
     background: var(--white);
     box-shadow: var(--shadow);
     min-height: 100vh;
@@ -735,10 +738,9 @@ select:focus-visible,
         box-shadow: 0 25px 60px rgba(0,0,0,0.12);
     }
 
-    .lang-switcher {
-        top: 24px;
-        right: 24px;
-    }
+    .corner-left { left: 24px; }
+    .corner-right { right: 24px; }
+    .corner-controls { top: 24px; }
 
     .couple-cards-wrapper {
         max-width: 480px;
@@ -808,7 +810,78 @@ select:focus-visible,
     .particles { display: none; }
 }
 
+/* Bir nechta video */
+#video-list .video-section-item { margin-bottom: 16px; }
+#video-list .video-section-item:last-child { margin-bottom: 0; }
+#video-list video {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    background: #000;
+    max-height: 70vh;
+    display: block;
+}
+
+/* Rasmlar galereyasi */
+.gallery-section { margin: 30px 0; text-align: center; }
+
+.gallery-header {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 4vw, 1.7rem);
+    margin-bottom: 14px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+@media (hover: hover) {
+    .gallery-grid img:hover { transform: scale(1.04); box-shadow: 0 8px 18px rgba(212, 175, 55, 0.3); }
+}
+
+@media (min-width: 640px) {
+    .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .gallery-grid img { height: 150px; }
+}
+
+/* Galereya kattalashtirish oynasi */
+.gallery-modal-img {
+    position: relative;
+    z-index: 2001;
+    max-width: 92vw;
+    max-height: 86dvh;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+
+.gallery-modal-close {
+    position: fixed;
+    top: calc(18px + var(--safe-top));
+    right: 18px;
+    z-index: 2002;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 22px;
+    color: var(--text-dark);
+    cursor: pointer;
+}
+
 /* Chop etish (print) */
 @media print {
-    .welcome-screen, .particles, .music-toggle, .lang-switcher, .video-section { display: none !important; }
+    .welcome-screen, .particles, .music-toggle, .corner-controls, .video-section, .gallery-section { display: none !important; }
 }
