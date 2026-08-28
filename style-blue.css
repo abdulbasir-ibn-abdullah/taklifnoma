@@ -520,7 +520,7 @@ a:focus-visible, button:focus-visible, select:focus-visible, [tabindex]:focus-vi
     text-align: center; padding: 26px 0;
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     color: var(--primary-color);
 }
 

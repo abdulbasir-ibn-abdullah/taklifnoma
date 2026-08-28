@@ -99,6 +99,38 @@ Yuqoridagi nomlash qoidasi (`groom`, `gallery1`, `video2`...) shart emas — aga
 
 `media` bo'limidagi har bir maydon **ixtiyoriy** — kerakli qismini qoldirib, qolganini o'chirib tashlashingiz mumkin.
 
+## 🔗 Havola orqali tashqaridan boshqarish (push/deploy shart emas)
+
+Sayt bir marta joylashtirilgandan keyin, mazmunini (ism, dizayn, til, rasm/video/audio) **kodga tegmasdan, faqat havolaga parametr qo'shib** o'zgartirish mumkin. Hech narsa serverga yuklab olinmaydi/saqlanmaydi — brauzer ko'rsatilgan havoladan to'g'ridan-to'g'ri o'qiydi.
+
+| Parametr | Nima qiladi | Misol |
+|---|---|---|
+| `name` | Mehmon ismi | `?name=Alijon%20va%20Valijon` |
+| `theme` | Standart dizayn (`gold`, `blue`, `royal`) | `?theme=blue` |
+| `lang` | Standart til (`uz`, `uzk`, `ru`, `en`) | `?lang=ru` |
+| `groom_img`, `bride_img`, `restaurant_img`, `couple_img`, `audio` | Bitta media fayl havolasi | `?bride_img=https://...` |
+| `video`, `gallery` | Bir nechta havola, vergul bilan | `?gallery=https://a.jpg,https://b.jpg` |
+| `config` | Bitta JSON fayl havolasi — yuqoridagilarning **barchasini** (matn, sana, media) bitta joydan boshqaradi | `?config=https://...data.json` |
+
+Bir nechtasini birga ishlatish mumkin: `index.html?name=Alijon&theme=blue&bride_img=https://...`
+
+**Media havolasi qayerdan bo'lishi mumkin?** Google Drive, Dropbox va GitHub ulashish havolalari **avtomatik** to'g'ri formatga o'giriladi (ulashish huquqi "Hamma uchun ochiq / Anyone with the link" qilib qo'yilgan bo'lishi shart). Boshqa har qanday to'g'ridan-to'g'ri havola (Telegram CDN, boshqa hosting) ham ishlaydi.
+
+> ⚠️ Katta hajmli video/audio uchun Google Drive ba'zan "virus tekshiruvi" oynasi chiqarishi yoki sekin/uzilib-uzilib yuklashi mumkin — video uchun maxsus video-hosting (masalan biror CDN yoki YouTube unlisted) ko'proq ishonchli.
+
+**`?config=` bilan to'liq boshqarish** — masalan `data/data.json`dagi tuzilmani boshqa joyga (GitHub Gist "raw" havolasi, Dropbox, ochiq Drive fayli) joylab, faqat shu havolani mehmonlarga tarqatish mumkin. Qo'shimcha ravishda, agar mediani filename emas, balki **to'g'ridan-to'g'ri havola** sifatida bermoqchi bo'lsangiz, config faylga `media` o'rniga `media_urls` bo'limini qo'shing:
+```json
+{
+  "media_urls": {
+    "groom_image": "https://drive.google.com/file/d/XXXX/view",
+    "bride_image": "https://www.dropbox.com/s/xxxx/rasm.jpg?dl=0",
+    "videos": ["https://.../video1.mp4", "https://.../video2.mp4"],
+    "gallery_images": ["https://.../1.jpg", "https://.../2.jpg"]
+  }
+}
+```
+**Ustuvorlik tartibi:** URL parametri (`?bride_img=...`) → config/data.json `media_urls` → `assets/` papkadagi fayl → data.json `media` (filename) → standart zaxira rasm. Tashqi havola biror sababga ko'ra ishlamay qolsa (o'chirilgan, ruxsat yo'q), sahifa avtomatik standart rasmga qaytadi — hech qachon buzuq rasm ko'rinmaydi.
+
 ## 🚀 Joylashtirish (Deploy)
 
 ### GitHub Pages
@@ -133,3 +165,4 @@ Uchalasida ham qo'shimcha sozlash shart emas — sayt toza HTML/CSS/JS, hech qan
 - Tanlangan til va dizayn brauzerda **saqlanadi** — qayta kirganda o'sha holatda ochiladi
 - Rasm/audio/video tekshiruvlari **parallel** ishlaydi (sahifa tezroq yuklanadi)
 - GitHub Pages / Netlify / Vercelga **bir zumda** joylashtirish uchun tayyor konfiguratsiya fayllari
+

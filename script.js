@@ -165,6 +165,56 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
+    // ============================================================
+    // Bulutli xotira (Google Drive, Dropbox, GitHub) ulashish havolalarini
+    // to'g'ridan-to'g'ri fayl sifatida ochiladigan havolaga o'giradi.
+    // Boshqa har qanday havola (Telegram CDN, S3, boshqa hosting) o'zgarishsiz qaytadi.
+    // ============================================================
+    function normalizeCloudUrl(url) {
+        if (!url) return url;
+        try {
+            const u = new URL(url);
+
+            // Google Drive: /file/d/ID/view yoki open?id=ID -> https://drive.google.com/uc?export=view&id=ID
+            // Diqqat: katta hajmli (~100MB+) fayllarda Drive "virus tekshiruvi" oynasini ko'rsatishi mumkin —
+            // bunday hollarda video/audio uchun boshqa hosting (masalan to'g'ridan-to'g'ri CDN) tavsiya etiladi.
+            if (u.hostname.includes('drive.google.com')) {
+                let id = null;
+                const m = u.pathname.match(/\/d\/([^/]+)/);
+                if (m) id = m[1];
+                if (!id) id = u.searchParams.get('id');
+                if (id) return `https://drive.google.com/uc?export=view&id=${id}`;
+            }
+
+            // Dropbox: ?dl=0 -> ?raw=1 (to'g'ridan-to'g'ri ko'rsatish, yuklab olish oynasisiz)
+            if (u.hostname.includes('dropbox.com')) {
+                u.searchParams.delete('dl');
+                u.searchParams.set('raw', '1');
+                return u.toString();
+            }
+
+            // GitHub: /blob/ -> raw.githubusercontent.com
+            if (u.hostname === 'github.com') {
+                const m = u.pathname.match(/^\/([^/]+)\/([^/]+)\/blob\/(.+)$/);
+                if (m) return `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}`;
+            }
+
+            return url;
+        } catch (e) {
+            return url; // noto'g'ri/bo'sh URL bo'lsa o'zgarishsiz qaytariladi
+        }
+    }
+
+    // Vergul bilan ajratilgan bir nechta havolani massivga aylantiradi (?video=, ?gallery= uchun)
+    function splitUrlList(value) {
+        if (!value) return [];
+        return decodeURIComponent(value)
+            .split(',')
+            .map(s => s.trim())
+            .filter(Boolean)
+            .map(normalizeCloudUrl);
+    }
+
     // Fayllarni izlash funksiyasi (rasm/audio/video uchun) — bitta faylni topadi
     async function resolveMedia(names, defaultFallback, exts = ['png', 'jpg', 'jpeg', 'webp', 'svg']) {
         for (const name of names) {
@@ -246,6 +296,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return [];
     }
 
+    // Barcha URL parametrlarini bitta joyda o'qib olish
+    const urlParams = new URLSearchParams(window.location.search);
+
     // Attempt to fetch data.json, overwrite fallback if success
     try {
         const res = await fetch('data/data.json', { cache: 'no-store' });
@@ -257,8 +310,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.warn("data.json o'qib bo'lmadi (lokal fayl rejimi yoki tarmoq xatosi), zaxira ob'ekti ishlatilmoqda.");
     }
 
-    // URL parametrlaridan mehmon ismini o'qib olish (?name=alijon va valijon)
-    const urlParams = new URLSearchParams(window.location.search);
+    // ============================================================
+    // TASHQI BOSHQARUV (push/deploy shart emas): ?config=<JSON havolasi>
+    // Butun taklifnomani (matn, sana, media havolalari) bitta havola bilan
+    // boshqarish imkonini beradi — config faylini Drive/Dropbox/GitHub Gist'da
+    // yangilasangiz, sayt kodini tegmasdan mazmun yangilanadi.
+    // ============================================================
+    const configUrl = urlParams.get('config');
+    if (configUrl) {
+        try {
+            const res = await fetch(normalizeCloudUrl(decodeURIComponent(configUrl)), { cache: 'no-store' });
+            if (res.ok) {
+                const remote = await res.json();
+                jsonData = {
+                    ...jsonData,
+                    ...remote,
+                    translations: { ...(jsonData.translations || {}), ...(remote.translations || {}) },
+                    media: { ...(jsonData.media || {}), ...(remote.media || {}) },
+                    media_urls: { ...(jsonData.media_urls || {}), ...(remote.media_urls || {}) }
+                };
+            }
+        } catch (e) {
+            console.warn("Masofaviy config o'qib bo'lmadi:", e);
+        }
+    }
+
+    // URL parametrlaridan mehmon ismini o'qib olish (?name=alijon va valijon) — configdan ham ustun
     const guestFromUrl = urlParams.get('name');
     if (guestFromUrl) {
         const decodedName = decodeURIComponent(guestFromUrl).trim();
@@ -266,23 +343,61 @@ document.addEventListener("DOMContentLoaded", async () => {
         jsonData.guest_name = decodedName.toUpperCase();
     }
 
+    // Havola orqali beriladigan aniq media manzillari (?groom_img=, ?video=url1,url2 ...)
+    // Bular eng yuqori ustuvorlikka ega: Drive/Dropbox/GitHub kabi bulutdagi haqiqiy fayl
+    // to'g'ridan-to'g'ri ishlatiladi — hech narsa serverga yuklab olinmaydi/saqlanmaydi.
+    const urlMedia = {
+        groom_image: normalizeCloudUrl(urlParams.get('groom_img')),
+        bride_image: normalizeCloudUrl(urlParams.get('bride_img')),
+        restaurant_image: normalizeCloudUrl(urlParams.get('restaurant_img')),
+        couple_image: normalizeCloudUrl(urlParams.get('couple_img')),
+        audio: normalizeCloudUrl(urlParams.get('audio')),
+        videos: splitUrlList(urlParams.get('video')),
+        gallery_images: splitUrlList(urlParams.get('gallery'))
+    };
+    // data.json yoki ?config havolasidagi "media_urls" bo'limi ham xuddi shunday ishlaydi
+    // (filename emas, to'liq havola kutiladi) — ?... parametrlar bundan ham ustun turadi.
+    const remoteMediaUrls = jsonData.media_urls || {};
+
+    // Ustuvorlik: 1) URL parametri  2) config/data.json media_urls  3) assets/ papkasidagi fayl
+    // 4) data.json "media" (filename)  5) standart zaxira rasm
+    async function resolveSingleWithDirectUrl(directUrl, autoNames, overrideFilename, defaultFallback, exts) {
+        if (directUrl) return directUrl;
+        return resolveSingleImage(autoNames, overrideFilename, defaultFallback, exts);
+    }
+    async function resolveMultipleWithDirectUrl(directUrls, autoNames, exts, overrideList) {
+        if (Array.isArray(directUrls) && directUrls.length > 0) return directUrls;
+        return resolveMultipleWithOverride(autoNames, exts, overrideList);
+    }
 
     // Media elementlarni aniqlash (parallel) — video va galereya bir nechta fayl boʻlishi mumkin
-    // Har biri: 1) odatdagi nom bo'yicha avtomatik qidiradi, 2) topilmasa data.json'dagi "media"
-    // bo'limida ko'rsatilgan aniq fayl nomi/ro'yxatiga qaraydi (ixtiyoriy, istalgan nom bo'lishi mumkin).
     const mediaOverrides = jsonData.media || {};
     const [groomImgUrl, brideImgUrl, restImgUrl, coupleBgUrl, videoUrls, galleryUrls] = await Promise.all([
-        resolveSingleImage(['groom', 'kuyov'], mediaOverrides.groom_image, 'default_groom.png'),
-        resolveSingleImage(['bride', 'kelin'], mediaOverrides.bride_image, 'default_bride.png'),
-        resolveSingleImage(['restaurant', 'restoran'], mediaOverrides.restaurant_image, 'default_restaurant.png'),
-        resolveSingleImage(['couple', 'juftlik'], mediaOverrides.couple_image, null),
-        resolveMultipleWithOverride(['video', 'wedding', 'toy'], ['mp4', 'webm', 'mov'], mediaOverrides.videos),
-        resolveMultipleWithOverride(['gallery', 'rasm', 'photo'], ['png', 'jpg', 'jpeg', 'webp'], mediaOverrides.gallery_images)
+        resolveSingleWithDirectUrl(urlMedia.groom_image || remoteMediaUrls.groom_image, ['groom', 'kuyov'], mediaOverrides.groom_image, 'default_groom.png'),
+        resolveSingleWithDirectUrl(urlMedia.bride_image || remoteMediaUrls.bride_image, ['bride', 'kelin'], mediaOverrides.bride_image, 'default_bride.png'),
+        resolveSingleWithDirectUrl(urlMedia.restaurant_image || remoteMediaUrls.restaurant_image, ['restaurant', 'restoran'], mediaOverrides.restaurant_image, 'default_restaurant.png'),
+        resolveSingleWithDirectUrl(urlMedia.couple_image || remoteMediaUrls.couple_image, ['couple', 'juftlik'], mediaOverrides.couple_image, null),
+        resolveMultipleWithDirectUrl(urlMedia.videos.length ? urlMedia.videos : remoteMediaUrls.videos, ['video', 'wedding', 'toy'], ['mp4', 'webm', 'mov'], mediaOverrides.videos),
+        resolveMultipleWithDirectUrl(urlMedia.gallery_images.length ? urlMedia.gallery_images : remoteMediaUrls.gallery_images, ['gallery', 'rasm', 'photo'], ['png', 'jpg', 'jpeg', 'webp'], mediaOverrides.gallery_images)
     ]);
 
     document.getElementById('groom-img').src = groomImgUrl;
     document.getElementById('bride-img').src = brideImgUrl;
     document.getElementById('restaurant-img').src = restImgUrl;
+
+    // Tashqi havola ishlamay qolsa (o'chirilgan/CORS/ruxsat yo'q) — standart rasmga qaytadi
+    document.getElementById('groom-img').addEventListener('error', function onErr() {
+        this.removeEventListener('error', onErr);
+        this.src = 'assets/default_groom.png';
+    });
+    document.getElementById('bride-img').addEventListener('error', function onErr() {
+        this.removeEventListener('error', onErr);
+        this.src = 'assets/default_bride.png';
+    });
+    document.getElementById('restaurant-img').addEventListener('error', function onErr() {
+        this.removeEventListener('error', onErr);
+        this.src = 'assets/default_restaurant.png';
+    });
 
     if (coupleBgUrl) {
         document.getElementById('couple-bg').style.backgroundImage = `url('${coupleBgUrl}')`;
@@ -367,7 +482,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     async function initAudio() {
-        const audioPath = await resolveSingleImage(['audio', 'ovoz', 'music'], mediaOverrides.audio, null, ['mp3', 'wav', 'ogg', 'm4a']);
+        const audioPath = urlMedia.audio || remoteMediaUrls.audio ||
+            await resolveSingleImage(['audio', 'ovoz', 'music'], mediaOverrides.audio, null, ['mp3', 'wav', 'ogg', 'm4a']);
         if (audioPath) {
             audioEl.src = audioPath;
             audioEl.addEventListener('error', () => musicBtn.classList.add('hidden'));
@@ -631,19 +747,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Dastlabki til: saqlangan tanlov bo'lsa o'shani, bo'lmasa 'uz'
+    // Dastlabki til: ?lang= URL parametri > saqlangan tanlov > 'uz'
     let initialLang = 'uz';
-    try {
-        const savedLang = localStorage.getItem('taklifnoma_lang');
-        if (savedLang && uiTranslations[savedLang]) initialLang = savedLang;
-    } catch (e) { /* localStorage mavjud bo'lmasa e'tiborsiz qoldiriladi */ }
+    const langFromUrl = urlParams.get('lang');
+    if (langFromUrl && uiTranslations[langFromUrl]) {
+        initialLang = langFromUrl;
+    } else {
+        try {
+            const savedLang = localStorage.getItem('taklifnoma_lang');
+            if (savedLang && uiTranslations[savedLang]) initialLang = savedLang;
+        } catch (e) { /* localStorage mavjud bo'lmasa e'tiborsiz qoldiriladi */ }
+    }
 
-    // Dastlabki dizayn: saqlangan tanlov bo'lsa o'shani, bo'lmasa 'royal'
+    // Dastlabki dizayn: ?theme= URL parametri > saqlangan tanlov > 'royal'
     let initialTheme = 'royal';
-    try {
-        const savedTheme = localStorage.getItem('taklifnoma_theme');
-        if (savedTheme && VALID_THEMES.includes(savedTheme)) initialTheme = savedTheme;
-    } catch (e) { /* localStorage mavjud bo'lmasa e'tiborsiz qoldiriladi */ }
+    const themeFromUrl = urlParams.get('theme');
+    if (themeFromUrl && VALID_THEMES.includes(themeFromUrl)) {
+        initialTheme = themeFromUrl;
+    } else {
+        try {
+            const savedTheme = localStorage.getItem('taklifnoma_theme');
+            if (savedTheme && VALID_THEMES.includes(savedTheme)) initialTheme = savedTheme;
+        } catch (e) { /* localStorage mavjud bo'lmasa e'tiborsiz qoldiriladi */ }
+    }
 
     document.getElementById('lang-select').value = initialLang;
     renderLanguage(initialLang);
@@ -669,3 +795,4 @@ document.addEventListener("DOMContentLoaded", async () => {
         animatedElements.forEach(el => el.classList.add('visible'));
     }
 });
+

@@ -1,51 +1,51 @@
 {
-  "wedding_date": "2026-08-20",
+  "wedding_date": "2026-09-02",
   "wedding_time": "19:00",
   "guest_name": "Mehmonimiz",
   "restaurant_location": {
-    "lat": 39.7345,
-    "lon": 64.1850
+    "lat": 39.41094,
+    "lon": 63.80108
   },
   "translations": {
     "uz": {
-      "groom": "Yahyo",
-      "bride": "Madina",
-      "groom_bio": "Yahyo Yagʻmurov",
-      "bride_bio": "Madina Xolova",
-      "groom_family": "Oltiyevlar",
-      "bride_family": "Xolovlar",
-      "restaurant_name": "Oʻzbegim tantanalar Saroyi",
-      "venue_address": "Buxoro viloyati, Jondor tumani Oʻzbegim toʻyxonasi"
+      "groom": "Shaxzod",
+      "bride": "Dilnura",
+      "groom_bio": "",
+      "bride_bio": "",
+      "groom_family": "Karomatovlar",
+      "bride_family": "Bozorovlar",
+      "restaurant_name": "Shirin Bobo Tantanalar Saroyi",
+      "venue_address": "Buxoro viloyati, Olot tumani, Doʻstlik koʻchasi. Mo'ljal: Olot tuman elektr tarmoqlari binosi (Elektroset) va Hokimiyat"
     },
     "uzk": {
-      "groom": "Яҳё",
-      "bride": "Мадина",
-      "groom_bio": "Яҳё Яғмуров",
-      "bride_bio": "Мадина Холова",
-      "groom_family": "Олтиевлар оиласи",
-      "bride_family": "Холовлар оиласи",
-      "restaurant_name": "Ўзбегим тантаналар Саройи",
-      "venue_address": "Бухоро вилояти, Жондор тумани Ўзбегим тўйхонаси"
+      "groom": "Шахзод",
+      "bride": "Дилнура",
+      "groom_bio": "",
+      "bride_bio": "",
+      "groom_family": "Кароматовлар оиласи",
+      "bride_family": "Бозоровлар оиласи",
+      "restaurant_name": "Ширин Бобо Тантаналар Саройи",
+      "venue_address": "Бухоро вилояти, Олот тумани, Дўстлик кўчаси. Мўлжал: Олот туман электр тармоқлари биноси (Электросеть) ва Ҳокимият"
     },
     "ru": {
-      "groom": "Яхё",
-      "bride": "Мадина",
-      "groom_bio": "Яхё Ягмуров",
-      "bride_bio": "Мадина Холова",
-      "groom_family": "Семья Олтиевых",
-      "bride_family": "Семья Холовых",
-      "restaurant_name": "Торжественный зал «Oʻzbegim»",
-      "venue_address": "Бухарская область, Жондорский район, тойхона «Oʻzbegim»"
+      "groom": "Шахзод",
+      "bride": "Дильнура",
+      "groom_bio": "",
+      "bride_bio": "",
+      "groom_family": "Семья Кароматовых",
+      "bride_family": "Семья Бозоровых",
+      "restaurant_name": "Ресторан «Shirin Bobo»",
+      "venue_address": "Бухарская область, Алатский район, улица Дустлик. Ориентир: здание Алатских районных электросетей (Электросеть) и Хокимият"
     },
     "en": {
-      "groom": "Yahyo",
-      "bride": "Madina",
-      "groom_bio": "Yahyo Yagmurov",
-      "bride_bio": "Madina Kholova",
-      "groom_family": "Oltiev Family",
-      "bride_family": "Kholov Family",
-      "restaurant_name": "Oʻzbegim Grand Ballroom",
-      "venue_address": "Bukhara region, Jondor district, Oʻzbegim wedding hall"
+      "groom": "Shaxzod",
+      "bride": "Dilnura",
+      "groom_bio": "",
+      "bride_bio": "",
+      "groom_family": "Karomatov Family",
+      "bride_family": "Bozorov Family",
+      "restaurant_name": "Shirin Bobo Grand Hall",
+      "venue_address": "Bukhara region, Alat district, Dustlik street. Landmark: Alat district electricity networks building (Elektroset) and Khokimiyat"
     }
   }
 }
